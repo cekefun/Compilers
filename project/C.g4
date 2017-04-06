@@ -24,11 +24,11 @@ statements
 	;
 
 statement
-	: TypeDecl Identifier ('['constant'])?';'							#VarDeclaration
-	| TypeDecl Identifier ('['constant'])? '(' parameterlist ')' ';'	#FunDeclaration
-	| TypeDecl? Identifier AssignementOperator expression ';'			#Definition
-	| expression ';'													#Calculation
-	| Return expression? ';'											#Return
+	: TypeDecl Identifier ('['Constant']')? ';'											#VarDeclaration
+	| TypeDecl Identifier ('['Constant']')? '(' parameterlist ')' ';'					#FunDeclaration
+	| TypeDecl? Identifier ('['expression']')? AssignementOperator expression ';'		#Definition
+	| expression ';'																	#Calculation
+	| Return expression? ';'															#Return
 	;
 
 ifstatement
@@ -37,13 +37,14 @@ ifstatement
 	;
 
 elsestatement
-	: Else'{' statements '}'
+	: Else '{' statements '}'
 	| Else statement
 	;
 
 whilestatement
 	: While '(' expression ')' '{' statements '}'
-	| While '(' expression ')' statement 
+	| While '(' expression ')' statement
+	;
 
 function
 	: TypeDecl? Identifier '(' parameterlist ')' '{' statements '}'
@@ -71,13 +72,13 @@ relationCondition
 	;
 
 addCondition
-	: addCondtion AddOperator multCondtion
+	: addCondition AddOperator multCondition
 	| multCondition
 	;
 
-multCondtion
-	: multCondtion MultOperator finalCondition
-	| finalCondtion
+multCondition
+	: multCondition MultOperator finalCondition
+	| finalCondition
 	; 
 
 
@@ -95,8 +96,9 @@ parameterlist
 	;
 
 parameter
-	: TypeDecl Identifier? ('['constant'])?
-	| TypeDecl Identifier? ('['constant'])? ',' parameter
+	: TypeDecl Identifier? ( '[ 'Constant ']' )?
+	| TypeDecl Identifier? ( '[' Constant ']' )? ',' parameter
+	;
 
 UnaryOperator
 	: '!'
@@ -125,7 +127,7 @@ RelationOperator
 	| '>='
 	;
 
-MulOperator
+MultOperator
 	: '*'
 	| '/'
 	;
@@ -136,13 +138,19 @@ AddOperator
 	;
 
 TypeDecl
+	: '*'* Types
+	;
+
+fragment
+Types
 	: 'char'
 	| 'float'
 	| 'int'
-	| TypeDecl '*'
 	| 'void'
 	| 'bool'
 	;
+
+
 
 If
 	:'if'
@@ -167,13 +175,14 @@ Constant
 	;
 
 IntConstant
-	: -? [1-9] Digit*
-	| 0
+	: '-'? [1-9] Digit*
+	| '0'
 	;
 
 FloatConstant
-	: -?  Digit*'.'Digit+
-	| -?  Digit+'.'
+	: '-'?  Digit* '.' Digit+
+	| '-'?  Digit+ '.'
+	;
 
 CharacterConstant
 	: '\'' CChar+ '\''
@@ -184,20 +193,25 @@ CChar
     |   EscapeSequence
     ;
 
+fragment
 EscapeSequence
 	: '\\' ['"?abfnrtv\\]
 	| 
-
-Identifier
-	: Nondigit (NonDigit | Digit)*
 	;
 
+Identifier
+	: Nondigit (Nondigit | Digit)*
+	;
+
+fragment
 Digit
 	: [0-9]
 	;
 
+fragment
 Nondigit
 	:[a-zA-Z_]
+	;
 
 Whitespace
     :   [ \t]+
