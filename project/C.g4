@@ -54,6 +54,7 @@ function
 expression
 	: expression '||' andCondition
 	| andCondition
+	
 	;
 
 andCondition
@@ -83,7 +84,7 @@ multCondition
 
 
 finalCondition
-	: Identifier
+	: Identifier ('(' parameterlist ')' )? 
 	| Identifier '[' expression ']'
 	| Constant
 	| '(' expression ')'
@@ -138,7 +139,7 @@ AddOperator
 	;
 
 TypeDecl
-	: '*'* Types
+	: global'? Types '*'*
 	;
 
 fragment
