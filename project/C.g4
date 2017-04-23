@@ -54,7 +54,7 @@ function
 expression
 	: expression '||' andCondition
 	| andCondition
-	
+	| 'new' TypeDecl
 	;
 
 andCondition
