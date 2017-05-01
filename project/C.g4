@@ -2,7 +2,7 @@ grammar C;
 
 program
 	:
-	includes statements
+	includes statements EOF
 	;
 
 includes
@@ -11,8 +11,8 @@ includes
 	;
 
 include
-	: '#include <' CChar+ '>'
-	| '#include "' CChar+ '"' 
+	: '#include <' Filename '>'
+	| '#include "' Filename '"' 
 	;
 
 statements
@@ -24,11 +24,11 @@ statements
 	;
 
 statement
-	: TypeDecl Identifier ('['Constant']')? ';'											#VarDeclaration
-	| TypeDecl Identifier ('['Constant']')? '(' parameterlist ')' ';'					#FunDeclaration
-	| TypeDecl? Identifier ('['expression']')? AssignementOperator expression ';'		#Definition
-	| expression ';'																	#Calculation
-	| Return expression? ';'															#Return
+	: typeDecl Identifier array? ';'												#VarDeclaration
+	| typeDecl Identifier array? '(' parameterlist ')' ';'							#FunDeclaration
+	| typeDecl? Identifier array?? AssignementOperator expression ';'				#Definition
+	| expression ';'																#Calculation
+	| Return expression? ';'														#Return
 	;
 
 ifstatement
@@ -47,14 +47,14 @@ whilestatement
 	;
 
 function
-	: TypeDecl? Identifier '(' parameterlist ')' '{' statements '}'
-	| TypeDecl? Identifier '(' parameterlist ')' statement
+	: typeDecl? Identifier '(' parameterlist ')' '{' statements '}'
+	| typeDecl? Identifier '(' parameterlist ')' statement
 	;
 
 expression
 	: expression '||' andCondition
 	| andCondition
-	| 'new' TypeDecl
+	| 'new' typeDecl
 	;
 
 andCondition
@@ -85,7 +85,7 @@ multCondition
 
 finalCondition
 	: Identifier ('(' parameterlist ')' )? 
-	| Identifier '[' expression ']'
+	| Identifier array
 	| Constant
 	| '(' expression ')'
 	| UnaryOperator finalCondition
@@ -97,8 +97,16 @@ parameterlist
 	;
 
 parameter
-	: TypeDecl Identifier? ( '[ 'Constant ']' )?
-	| TypeDecl Identifier? ( '[' Constant ']' )? ',' parameter
+	: typeDecl Identifier? array?
+	| typeDecl Identifier? array? ',' parameter
+	;
+
+typeDecl
+	:Modifier? Type Pointer*
+	;
+
+array
+	: '['expression']'
 	;
 
 UnaryOperator
@@ -138,12 +146,11 @@ AddOperator
 	| '-'
 	;
 
-TypeDecl
-	: global'? Types '*'*
+Pointer
+	:'*'
 	;
 
-fragment
-Types
+Type
 	: 'char'
 	| 'float'
 	| 'int'
@@ -151,7 +158,29 @@ Types
 	| 'bool'
 	;
 
+Modifier
+	:'global'
+	;
 
+Void
+	:'void'
+	;
+
+Char
+	:'char'
+	;
+
+Int
+	: 'int'
+	;
+
+Float
+	: 'float'
+	;
+
+Bool
+	: 'bool'
+	;
 
 If
 	:'if'
@@ -189,6 +218,11 @@ CharacterConstant
 	: '\'' CChar+ '\''
 	;
 
+Filename
+	: CChar+ '.h'  //(Digit|Nondigit)+
+	;
+
+fragment
 CChar 
 	:  ~['\\\r\n]
     |   EscapeSequence
@@ -197,7 +231,6 @@ CChar
 fragment
 EscapeSequence
 	: '\\' ['"?abfnrtv\\]
-	| 
 	;
 
 Identifier

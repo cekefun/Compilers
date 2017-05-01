@@ -206,3 +206,21 @@ class CListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by CParser#typeDecl.
+    def enterTypeDecl(self, ctx:CParser.TypeDeclContext):
+        pass
+
+    # Exit a parse tree produced by CParser#typeDecl.
+    def exitTypeDecl(self, ctx:CParser.TypeDeclContext):
+        pass
+
+
+    # Enter a parse tree produced by CParser#array.
+    def enterArray(self, ctx:CParser.ArrayContext):
+        pass
+
+    # Exit a parse tree produced by CParser#array.
+    def exitArray(self, ctx:CParser.ArrayContext):
+        pass
+
+

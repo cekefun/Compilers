@@ -119,5 +119,15 @@ class CVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by CParser#typeDecl.
+    def visitTypeDecl(self, ctx:CParser.TypeDeclContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by CParser#array.
+    def visitArray(self, ctx:CParser.ArrayContext):
+        return self.visitChildren(ctx)
+
+
 
 del CParser
