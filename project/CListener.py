@@ -224,3 +224,12 @@ class CListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by CParser#constant.
+    def enterConstant(self, ctx:CParser.ConstantContext):
+        pass
+
+    # Exit a parse tree produced by CParser#constant.
+    def exitConstant(self, ctx:CParser.ConstantContext):
+        pass
+
+

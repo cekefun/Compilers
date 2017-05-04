@@ -81,9 +81,23 @@ class CustomVisitor(CVisitor):
         newNode.data = "VarDecl"
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
+
+        print(ctx.Identifier().getPayload())
+
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
+
+        idIndex = 0
+        if(newNode.children[0].data == "typeDecl"):
+            idIndex = 1
+
+        child = TerminalCustomNode()
+        child.type = "ID"
+        child.data = ctx.Identifier()
+        child.parent = newNode
+        newNode.children.insert(idIndex,child)
+
         return self.tree
 
 
@@ -100,6 +114,17 @@ class CustomVisitor(CVisitor):
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
+
+        idIndex = 0
+        if(newNode.children[0].data == "typeDecl"):
+            idIndex = 1
+
+        child = TerminalCustomNode()
+        child.type = "ID"
+        child.data = ctx.Identifier()
+        child.parent = newNode
+        newNode.children.insert(idIndex,child)
+
         return self.tree
 
 
@@ -112,10 +137,29 @@ class CustomVisitor(CVisitor):
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
 
-        
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
+
+        idIndex = 0
+        if(newNode.children[0].data == "typeDecl"):
+            idIndex = 1
+
+        child = TerminalCustomNode()
+        child.type = "ID"
+        child.data = ctx.Identifier()
+        child.parent = newNode
+        newNode.children.insert(idIndex,child)
+
+        idIndex += 1
+        if(newNode.children[idIndex] == "array"):
+            idIndex +=1
+        child = TerminalCustomNode()
+        child.type = "Assignement"
+        child.data = ctx.AssignementOperator()
+        child.parent = newNode
+        newNode.children.insert(idIndex,child)
+
         return self.tree
 
 
@@ -217,6 +261,17 @@ class CustomVisitor(CVisitor):
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
+
+        idIndex = 0
+        if(newNode.children[0].data == "typeDecl"):
+            idIndex = 1
+
+        child = TerminalCustomNode()
+        child.type = "ID"
+        child.data = ctx.Identifier()
+        child.parent = newNode
+        newNode.children.insert(idIndex,child)
+
         return self.tree
 
 
@@ -268,6 +323,14 @@ class CustomVisitor(CVisitor):
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
+
+        if(ctx.EqualOperator() != None):
+            child = TerminalCustomNode()
+            child.type = "EqOp"
+            child.data = ctx.EqualOperator()
+            child.parent = newNode
+            newNode.children.insert(1,child)
+
         return self.tree
 
 
@@ -285,6 +348,14 @@ class CustomVisitor(CVisitor):
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
+
+        if(ctx.RelationOperator() != None):
+            child = TerminalCustomNode()
+            child.type = "RelOp"
+            child.data = ctx.RelationOperator()
+            child.parent = newNode
+            newNode.children.insert(1,child)
+
         return self.tree
 
 
@@ -302,6 +373,14 @@ class CustomVisitor(CVisitor):
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
+
+        if(ctx.AddOperator() != None):
+            child = TerminalCustomNode()
+            child.type = "AddOp"
+            child.data = ctx.AddOperator()
+            child.parent = newNode
+            newNode.children.insert(1,child)
+
         return self.tree
 
 
@@ -319,6 +398,14 @@ class CustomVisitor(CVisitor):
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
+
+        if(ctx.MultOperator() != None):
+            child = TerminalCustomNode()
+            child.type = "MultOp"
+            child.data = ctx.MultOperator()
+            child.parent = newNode
+            newNode.children.insert(1,child)
+
         return self.tree
 
 
@@ -331,6 +418,20 @@ class CustomVisitor(CVisitor):
         newNode.data = "lowest"
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
+
+        if ctx.UnaryOperator() != None:
+            child = TerminalCustomNode()
+            child.type = "UnOp"
+            child.data = ctx.UnaryOperator()
+            child.parent = newNode
+            newNode.addChild(child)
+
+        if ctx.Identifier() != None:
+            child = TerminalCustomNode()
+            child.type = "ID"
+            child.data = ctx.Identifier()
+            child.parent = newNode
+            newNode.addChild(child)
 
         
         self.currentNode = newNode
@@ -381,6 +482,24 @@ class CustomVisitor(CVisitor):
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
 
+        if (ctx.Modifier()!= None):
+            child = TerminalCustomNode()
+            child.type = "modifier"
+            child.data = ctx.Modifier()
+            child.parent = newNode
+            newNode.addChild(child)
+        if (ctx.Type()!= None):
+            child = TerminalCustomNode()
+            child.type = "Type"
+            child.data = ctx.Type()
+            child.parent = newNode
+            newNode.addChild(child)
+        for i in ctx.Pointer():
+            child = TerminalCustomNode()
+            child.type = "Pointer"
+            child.data = "*"
+            newNode.addChild(child)
+            child.parent = newNode
         
         self.currentNode = newNode
         self.visitChildren(ctx)
@@ -396,11 +515,42 @@ class CustomVisitor(CVisitor):
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
 
-        
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
         return self.tree
 
+    # Visit a parse tree produced by CParser#constant.
+    def visitConstant(self, ctx:CParser.ConstantContext):
+        nodeHere = self.currentNode
+
+        newNode = Node()
+        newNode.data = "typeDecl"
+        newNode.parent = nodeHere
+        nodeHere.addChild(newNode)
+
+        if (ctx.IntConstant()!= None):
+            child = TerminalCustomNode()
+            child.type = "ConstInt"
+            child.data = ctx.IntConstant()
+            child.parent = newNode
+            newNode.addChild(child)
+        if (ctx.FloatConstant()!= None):
+            child = TerminalCustomNode()
+            child.type = "ConstFloat"
+            child.data = ctx.FloatConstant()
+            child.parent = newNode
+            newNode.addChild(child)
+        if ctx.CharacterConstant() != None:
+            child = TerminalCustomNode()
+            child.type = "ConstChar"
+            child.data = ctx.CharacterConstant()
+            newNode.addChild(child)
+            child.parent = newNode
+        
+        self.currentNode = newNode
+        self.visitChildren(ctx)
+        self.currentNode = nodeHere
+        return self.tree
 
 del CVisitor

@@ -129,5 +129,10 @@ class CVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by CParser#constant.
+    def visitConstant(self, ctx:CParser.ConstantContext):
+        return self.visitChildren(ctx)
+
+
 
 del CParser

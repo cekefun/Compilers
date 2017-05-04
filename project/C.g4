@@ -86,7 +86,7 @@ multCondition
 finalCondition
 	: Identifier ('(' parameterlist ')' )? 
 	| Identifier array
-	| Constant
+	| constant
 	| '(' expression ')'
 	| UnaryOperator finalCondition
 	;
@@ -109,9 +109,13 @@ array
 	: '['expression']'
 	;
 
+Pointer
+	:Star
+	;
+
 UnaryOperator
 	: '!'
-	| '*'
+	| Star
 	| '&'
 	;
 
@@ -137,17 +141,13 @@ RelationOperator
 	;
 
 MultOperator
-	: '*'
+	: Star
 	| '/'
 	;
 
 AddOperator
 	: '+'
 	| '-'
-	;
-
-Pointer
-	:'*'
 	;
 
 Type
@@ -198,7 +198,11 @@ While
 	: 'while'
 	;
 
-Constant
+Star
+	: '*'
+	;
+
+constant
 	: IntConstant
 	| FloatConstant
 	| CharacterConstant
