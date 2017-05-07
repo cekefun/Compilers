@@ -26,15 +26,6 @@ class CListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by CParser#include.
-    def enterInclude(self, ctx:CParser.IncludeContext):
-        pass
-
-    # Exit a parse tree produced by CParser#include.
-    def exitInclude(self, ctx:CParser.IncludeContext):
-        pass
-
-
     # Enter a parse tree produced by CParser#statements.
     def enterStatements(self, ctx:CParser.StatementsContext):
         pass
@@ -131,6 +122,15 @@ class CListener(ParseTreeListener):
 
     # Exit a parse tree produced by CParser#expression.
     def exitExpression(self, ctx:CParser.ExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by CParser#orCondition.
+    def enterOrCondition(self, ctx:CParser.OrConditionContext):
+        pass
+
+    # Exit a parse tree produced by CParser#orCondition.
+    def exitOrCondition(self, ctx:CParser.OrConditionContext):
         pass
 
 

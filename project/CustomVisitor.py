@@ -42,20 +42,15 @@ class CustomVisitor(CVisitor):
         self.currentNode = newNode
         self.visitChildren(ctx)
         self.currentNode = nodeHere
-        return self.tree
 
+        child = ctx.Include()
+        if(child != None):
+            child = TerminalCustomNode()
+            child.type = "include"
+            child.data = ctx.Include()
+            child.parent = newNode
+            newNode.addChild(child)
 
-    # Visit a parse tree produced by CParser#include.
-    def visitInclude(self, ctx:CParser.IncludeContext):
-        nodeHere = self.currentNode
-
-        newNode = Node()
-        newNode.data = "include"
-        newNode.parent = nodeHere
-        nodeHere.addChild(newNode)
-        self.currentNode = newNode
-        self.visitChildren(ctx)
-        self.currentNode = nodeHere
         return self.tree
 
 
@@ -81,8 +76,6 @@ class CustomVisitor(CVisitor):
         newNode.data = "VarDecl"
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
-
-        print(ctx.Identifier().getPayload())
 
         self.currentNode = newNode
         self.visitChildren(ctx)
@@ -159,6 +152,13 @@ class CustomVisitor(CVisitor):
         child.data = ctx.AssignementOperator()
         child.parent = newNode
         newNode.children.insert(idIndex,child)
+
+        if(ctx.Pointer() != None):
+            child = TerminalCustomNode()
+            child.type = "Poibter"
+            child.data = ctx.Pointer()
+            child.parent = newNode
+            newNode.children.insert(0,child)
 
         return self.tree
 
@@ -274,14 +274,27 @@ class CustomVisitor(CVisitor):
 
         return self.tree
 
-
-
-    # Visit a parse tree produced by CParser#expression.
+        # Visit a parse tree produced by CParser#expression.
     def visitExpression(self, ctx:CParser.ExpressionContext):
         nodeHere = self.currentNode
 
         newNode = Node()
         newNode.data = "Expression"
+        newNode.parent = nodeHere
+        nodeHere.addChild(newNode)
+
+        
+        self.currentNode = newNode
+        self.visitChildren(ctx)
+        self.currentNode = nodeHere
+        return self.tree
+
+    # Visit a parse tree produced by CParser#orCondition.
+    def visitOrCondition(self, ctx:CParser.ExpressionContext):
+        nodeHere = self.currentNode
+
+        newNode = Node()
+        newNode.data = "Or"
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
 
@@ -390,7 +403,7 @@ class CustomVisitor(CVisitor):
         nodeHere = self.currentNode
 
         newNode = Node()
-        newNode.data = "multiplication"
+        newNode.data = "Multiplication"
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
 
@@ -525,7 +538,7 @@ class CustomVisitor(CVisitor):
         nodeHere = self.currentNode
 
         newNode = Node()
-        newNode.data = "typeDecl"
+        newNode.data = "Const"
         newNode.parent = nodeHere
         nodeHere.addChild(newNode)
 

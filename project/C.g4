@@ -6,13 +6,13 @@ program
 	;
 
 includes
-	:include includes
+	:Include includes
 	|
 	;
 
-include
-	: '#include <' Filename '>'
-	| '#include "' Filename '"' 
+Include
+	: '#include <' .*? '>'
+	| '#include "' .*? '"' 
 	;
 
 statements
@@ -26,7 +26,7 @@ statements
 statement
 	: typeDecl Identifier array? ';'												#VarDeclaration
 	| typeDecl Identifier array? '(' parameterlist ')' ';'							#FunDeclaration
-	| typeDecl? Identifier array?? AssignementOperator expression ';'				#Definition
+	| (typeDecl|Pointer)? Identifier array?? AssignementOperator expression ';'		#Definition
 	| expression ';'																#Calculation
 	| Return expression? ';'														#Return
 	;
@@ -52,9 +52,13 @@ function
 	;
 
 expression
-	: expression '||' andCondition
-	| andCondition
+	: orCondition
 	| 'new' typeDecl
+	;
+
+orCondition
+	: orCondition '||' andCondition
+	| andCondition
 	;
 
 andCondition
@@ -110,12 +114,12 @@ array
 	;
 
 Pointer
-	:Star
+	:'*'
 	;
 
 UnaryOperator
 	: '!'
-	| Star
+	| '*'
 	| '&'
 	;
 
@@ -141,7 +145,7 @@ RelationOperator
 	;
 
 MultOperator
-	: Star
+	: '*'
 	| '/'
 	;
 
@@ -198,10 +202,6 @@ While
 	: 'while'
 	;
 
-Star
-	: '*'
-	;
-
 constant
 	: IntConstant
 	| FloatConstant
@@ -219,11 +219,7 @@ FloatConstant
 	;
 
 CharacterConstant
-	: '\'' CChar+ '\''
-	;
-
-Filename
-	: CChar+ '.h'  //(Digit|Nondigit)+
+	: '\'' CChar '\''
 	;
 
 fragment

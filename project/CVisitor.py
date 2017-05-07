@@ -19,11 +19,6 @@ class CVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by CParser#include.
-    def visitInclude(self, ctx:CParser.IncludeContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by CParser#statements.
     def visitStatements(self, ctx:CParser.StatementsContext):
         return self.visitChildren(ctx)
@@ -76,6 +71,11 @@ class CVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by CParser#expression.
     def visitExpression(self, ctx:CParser.ExpressionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by CParser#orCondition.
+    def visitOrCondition(self, ctx:CParser.OrConditionContext):
         return self.visitChildren(ctx)
 
 

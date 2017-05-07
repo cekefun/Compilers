@@ -17,5 +17,9 @@ def main(argv):
 
 	t.toDot("test.dot")
 
+	t.minimize()
+
+	t.toDot("test2.dot")
+
 if __name__ == '__main__':
 	main(sys.argv)
